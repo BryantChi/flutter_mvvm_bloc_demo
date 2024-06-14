@@ -5,14 +5,20 @@ import 'package:github_user/services/api_service.dart';
 
 class UserViewModel {
   final UserBloc userBloc;
-  int since = 0;
-  final int perPage = 20;
 
   UserViewModel()
       : userBloc = UserBloc(userRepository: UserRepository(apiService: ApiService()));
 
-  void fetchNextPage() {
-    userBloc.add(FetchUsers(since: since));
-    since += perPage;
+  void fetchUsers() {
+    userBloc.add(FetchUsers());
   }
+
+  void fetchMoreUsers() {
+    userBloc.add(FetchMoreUsers());
+  }
+
+  void showUser(String username) {
+    userBloc.add(FetchUserDetail(username: username));
+  }
+
 }
