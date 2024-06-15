@@ -1,5 +1,6 @@
 import 'package:github_user/blocs/users/user_bloc.dart';
 import 'package:github_user/blocs/users/user_event.dart';
+import 'package:github_user/blocs/users/user_state.dart';
 import 'package:github_user/repositories/user_repository.dart';
 import 'package:github_user/services/api_service.dart';
 
@@ -8,6 +9,8 @@ class UserViewModel {
 
   UserViewModel()
       : userBloc = UserBloc(userRepository: UserRepository(apiService: ApiService()));
+
+  Stream<UserState> get state => userBloc.stream;
 
   void fetchUsers() {
     userBloc.add(FetchUsers());
@@ -19,6 +22,10 @@ class UserViewModel {
 
   void showUser(String username) {
     userBloc.add(FetchUserDetail(username: username));
+  }
+
+  void dispose() {
+    userBloc.close();
   }
 
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_user/blocs/users/user_bloc.dart';
-import 'package:github_user/blocs/users/user_event.dart';
 import 'package:github_user/blocs/users/user_state.dart';
 import 'package:github_user/screens/user_detail_screen.dart';
 import 'package:github_user/view_models/user_view_model.dart';
@@ -14,8 +13,9 @@ class UserListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    userViewModel.fetchUsers();
     return BlocProvider(
-      create: (_) => userViewModel.userBloc..add(FetchUsers()),
+      create: (_) => userViewModel.userBloc,
       child: Scaffold(
         appBar: AppBar(title: const Text('GitHub Users')),
         body: BlocBuilder<UserBloc, UserState>(
@@ -23,17 +23,18 @@ class UserListScreen extends StatelessWidget {
             if (state is UserLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is UserError) {
-              return Center(child: InkWell(
-                onTap: () {
-                  userViewModel.userBloc..add(FetchUsers());
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.refresh),
-                    Text(state.message,)
-                  ],
-                ),
+              return Center(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      userViewModel.fetchUsers();
+                    },
+                    child: Icon(Icons.refresh),
+                  ),
+                  SizedBox(height: 16,),
+                  Text(state.message)
+                ],
               ));
             } else if (state is UserLoaded || state is UserLoadingMore) {
               final users = state is UserLoaded ? state.users : (state as UserLoadingMore).users;

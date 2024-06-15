@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_user/blocs/users/user_bloc.dart';
@@ -14,8 +16,9 @@ class UserDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    userViewModel.showUser(username);
     return BlocProvider(
-      create: (_) => userViewModel.userBloc..add(FetchUserDetail(username: username)),
+      create: (_) => userViewModel.userBloc,
       child: Scaffold(
         appBar: AppBar(
           title: Text(username),
@@ -34,15 +37,72 @@ class UserDetailScreen extends StatelessWidget {
               final user = state.user;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Image.network(user.avatarUrl, height: 100, width: 100),
-                    SizedBox(height: 16),
-                    Text(user.login, style: TextStyle(fontSize: 24)),
-                    SizedBox(height: 8),
-                    Text(user.bio ?? 'No bio available'),
-                    // ... display other user details as needed ...
-                  ],
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      // Image.network(user.avatarUrl, height: 200, width: 200),
+                      Container(
+                        height: 200,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(100),
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    user.avatarUrl))),
+                      ),
+                      SizedBox(height: 16),
+                      Text(user.name, style: TextStyle(fontSize: 24)),
+                      SizedBox(height: 8),
+                      Text(user.bio),
+                      SizedBox(height: 24),
+                      Divider(height: 1,),
+                      SizedBox(height: 36),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 24,),
+                          Icon(Icons.person,size: 42,),
+                          SizedBox(width: 48,),
+                          Text(user.login, style: TextStyle(fontSize: 18),),
+                          SizedBox(width: 24,),
+                          Icon(user.siteAdmin ? Icons.verified : null)
+                        ],
+                      ),
+                      SizedBox(height: 36),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 24,),
+                          Icon(Icons.location_on_outlined,size: 42,),
+                          SizedBox(width: 48,),
+                          Text(user.location, style: TextStyle(fontSize: 18),),
+                        ],
+                      ),
+                      SizedBox(height: 36),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 24,),
+                          Icon(Icons.link,size: 42,),
+                          SizedBox(width: 48,),
+                          InkWell(
+                            child: Text(
+                              user.blog,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            onTap: () => (user.blog),
+                          ),
+                        ],
+                      ),
+                      // ... display other user details as needed ...
+                    ],
+                  ),
                 ),
               );
             } else {

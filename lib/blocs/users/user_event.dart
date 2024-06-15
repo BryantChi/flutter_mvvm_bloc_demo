@@ -14,4 +14,7 @@ class FetchUserDetail extends UserEvent {
   final String username;
 
   FetchUserDetail({required this.username});
+
+  @override
+  List<Object> get props => [username];
 }
