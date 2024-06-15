@@ -87,16 +87,19 @@ class UserDetailScreen extends StatelessWidget {
                           SizedBox(width: 24,),
                           Icon(Icons.link,size: 42,),
                           SizedBox(width: 48,),
-                          InkWell(
-                            child: Text(
-                              user.blog,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
+                          Expanded(
+                            child: InkWell(
+                              child: Text(
+                                user.blog,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            onTap: () => (user.blog),
+                            )
                           ),
                         ],
                       ),
