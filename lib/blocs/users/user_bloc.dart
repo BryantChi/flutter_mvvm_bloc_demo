@@ -20,10 +20,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           hasMoreData = false;  // 最後一次加載不足20筆
         }
         if (users.isNotEmpty) {
-          since = users.length;
+          since += users.length;
           emit(UserLoaded(users: users));
         } else {
-          emit(UserLoaded(users: []));
+          emit(UserLoaded(users: const []));
         }
       } catch (e) {
         emit(UserError(message: e.toString()));
